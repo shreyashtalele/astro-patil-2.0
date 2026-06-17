@@ -60,9 +60,9 @@
 }
 
 /* Debugger: Highlights elements causing overflow */
-* {
+/* * {
   outline: 1px solid red !important;
-}
+} */
 
 /* ─── Components ─────────────────────────────────────────────── */
 @layer components {
