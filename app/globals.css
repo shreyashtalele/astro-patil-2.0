@@ -2,12 +2,12 @@
 
 :root {
   --color-cosmic-900: #0b0b1a;
-  /* Deep dark cosmic blue */
   --color-gold-500: #f2d6a0;
-  /* Soft glowing gold/cream */
 }
 
-/* ─── Base Styles ────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────
+   BASE
+───────────────────────────────────────────── */
 @layer base {
 
   *,
@@ -16,90 +16,138 @@
     box-sizing: border-box;
   }
 
-  /* Fixes the "not responsive" mobile issue */
-  html,
-  body {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+  html {
     scroll-behavior: smooth;
   }
 
-  /* Ensures images don't break containers */
-  img,
-  video,
-  picture {
-    max-width: 100%;
-    height: auto;
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
   }
 
   body {
-    margin: 0;
-    overflow-x: hidden;
     background-color: var(--color-cosmic-900);
     color: var(--color-gold-500);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Offset for sticky header navigation */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
   section[id] {
-    scroll-margin-top: 56px;
-  }
-
-  @media (min-width: 640px) {
-    section[id] {
-      scroll-margin-top: 64px;
-    }
+    scroll-margin-top: 80px;
   }
 
   @media (min-width: 1024px) {
     section[id] {
-      scroll-margin-top: 80px;
+      scroll-margin-top: 100px;
     }
   }
 }
 
-/* Debugger: Highlights elements causing overflow */
-* {
-  outline: 1px solid red !important;
-}
-
-/* ─── Components ─────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────
+   COMPONENT UTILITIES
+───────────────────────────────────────────── */
 @layer components {
 
-  /* Reusable Responsive Section Container */
   .section-container {
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    /* 16px */
-    padding-right: 1rem;
-    /* 16px */
-    max-width: 1200px;
-  }
-
-  @media (min-width: 480px) {
-    .section-container {
-      padding-inline: 20px;
-    }
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1rem;
   }
 
   @media (min-width: 640px) {
     .section-container {
-      padding-inline: 24px;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .section-container {
-      padding-inline: 28px;
+      padding-inline: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .section-container {
-      padding-inline: 32px;
+      padding-inline: 2rem;
     }
   }
+
+  /* Single source of truth for all section vertical spacing */
+  .section-spacing {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .section-spacing {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #f7d56a 0%, #d4af37 100%);
+    color: #0b0b1a;
+    font-weight: 600;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+  }
 }
+
+/* ─────────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0b1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.4);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.7);
+}
+
+/* * {
+  outline: 1px solid red !important;
+} */

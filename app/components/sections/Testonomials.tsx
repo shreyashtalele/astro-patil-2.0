@@ -1,164 +1,164 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  type Variants,
-} from "framer-motion";
+import { useCallback, useEffect, useRef, useState, memo } from "react";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
-type Testimonial = {
-  name: string;
-  role: string;
-  text: string;
-  rating: number;
-  highlight?: boolean;
-};
-
-const testimonials: Testimonial[] = [
+const testimonials = [
   {
-    name: "Sakshi",
-    role: "Mumbai",
-    text: "Incredibly accurate birth chart reading. The predictions aligned perfectly with events in my life.",
+    name: "Aans",
+    location: "Mumbai",
+    service: "Life Guidance",
+    text: "The consultation gave me real clarity during one of the most difficult phases of my life. The guidance was practical, grounded, and surprisingly accurate.",
     rating: 5,
   },
   {
-    name: "Piyush",
-    role: "Nashik",
-    text: "I was skeptical at first, but the kundli reading was so accurate it left me speechless.",
-    rating: 5,
-  },
-  {
-    name: "Vaishnavi",
-    role: "Nagpur",
-    text: "The marriage compatibility reading gave us deep clarity before our wedding.",
+    name: "Navid",
+    location: "Pune",
+    service: "Kundli Reading",
+    text: "Incredibly detailed reading with predictions that matched my situation almost exactly. I was genuinely taken aback by the accuracy.",
     rating: 5,
     highlight: true,
   },
   {
-    name: "Aishwarya",
-    role: "Mumbai",
-    text: "Career guidance was spot on. Helped me make a major decision with confidence.",
-    rating: 5,
-  },
-  {
-    name: "Dipanshu",
-    role: "Kolkata",
-    text: "Very accurate predictions and helpful guidance. Highly recommended.",
+    name: "Samachan",
+    location: "Nagpur",
+    service: "Career Guidance",
+    text: "Made a major career decision with full confidence after this session. The clarity I got was something I couldn't find anywhere else.",
     rating: 5,
   },
   {
     name: "Priya",
-    role: "Pune",
-    text: "The gemstone recommendation made a noticeable difference in just weeks.",
+    location: "Mumbai",
+    service: "Marriage Compatibility",
+    text: "The kundli matching gave us both genuine reassurance before our wedding. Every concern was addressed thoughtfully and without judgment.",
+    rating: 5,
+  },
+  {
+    name: "Rohit",
+    location: "Nashik",
+    service: "Vastu Consultation",
+    text: "Professional, fully confidential, and very accurate. The Vastu remedies suggested were simple to follow and made a real difference.",
+    rating: 5,
+  },
+  {
+    name: "Sneha",
+    location: "Delhi",
+    service: "Finance Guidance",
+    text: "Every question answered with patience and depth. Left the session with a completely different perspective on my financial situation.",
     rating: 5,
     highlight: true,
   },
 ];
 
-const AUTO_DELAY = 4500;
-
-const slideVariants: Variants = {
-  enter: (dir: number) => ({
-    opacity: 0,
-    x: dir > 0 ? 40 : -40,
-  }),
-  center: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.35,
-      ease: "easeOut",
-    },
-  },
-  exit: (dir: number) => ({
-    opacity: 0,
-    x: dir > 0 ? -40 : 40,
-    transition: {
-      duration: 0.2,
-      ease: "easeIn",
-    },
-  }),
-};
+const AUTO_DELAY = 5000;
 
 function useVisibleCount() {
-  const [count, setCount] = useState(1);
-
+  const [count, setCount] = useState(3);
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
     const update = () => {
-      clearTimeout(timeout);
-
-      timeout = setTimeout(() => {
-        if (window.innerWidth >= 1280) setCount(3);
-        else if (window.innerWidth >= 768) setCount(2);
-        else setCount(1);
-      }, 100);
+      if (window.innerWidth >= 1280) setCount(3);
+      else if (window.innerWidth >= 768) setCount(2);
+      else setCount(1);
     };
-
     update();
-
     window.addEventListener("resize", update);
-
-    return () => {
-      clearTimeout(timeout);
-      window.removeEventListener("resize", update);
-    };
+    return () => window.removeEventListener("resize", update);
   }, []);
-
   return count;
 }
 
-function TestimonialCard({ item }: { item: Testimonial }) {
+const slideVariants: Variants = {
+  enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 40 : -40 }),
+  center: { opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } },
+  exit: (dir: number) => ({
+    opacity: 0,
+    x: dir > 0 ? -40 : 40,
+    transition: { duration: 0.25, ease: "easeIn" },
+  }),
+};
+
+function TestimonialCard({
+  item,
+  i,
+}: {
+  item: (typeof testimonials)[0];
+  i: number;
+}) {
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-white/10 bg-[#171124]/90 p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#D4AF37]/30">
-      <div className="mb-4 flex items-center justify-between">
-        <Quote size={20} className="text-[#D4AF37]" fill="currentColor" />
+    <motion.article
+      key={`${item.name}-${i}`}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: i * 0.08 }}
+      className="relative group h-full"
+    >
+      {/* Highlight glow */}
+      {item.highlight && (
+        <div className="absolute -inset-2 rounded-2xl bg-[#D4AF37]/10 blur-2xl opacity-60 pointer-events-none" />
+      )}
 
-        {item.highlight && (
-          <span className="rounded-full bg-[#D4AF37]/10 px-2 py-1 text-[10px] font-bold uppercase text-[#D4AF37]">
-            Featured
-          </span>
-        )}
-      </div>
+      <div className="relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D4AF37]/30">
+        {/* Radial inner glow */}
+        <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.08),transparent_65%)] opacity-80" />
 
-      <div className="mb-4 flex gap-1">
-        {Array.from({ length: item.rating }).map((_, idx) => (
-          <Star key={idx} size={14} className="fill-[#D4AF37] text-[#D4AF37]" />
-        ))}
-      </div>
+        {/* Top row: quote icon + featured badge + service tag */}
+        <div className="relative mb-5 flex items-center justify-between">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#D4AF37]/20 bg-[#D4AF37]/10">
+            <Quote size={16} className="text-[#D4AF37]" />
+          </div>
 
-      <p className="flex-1 text-sm leading-relaxed text-[#F2D6A0]/70">
-        {item.text}
-      </p>
+          <div className="flex items-center gap-2">
+            {/* Service tag */}
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-[#F2D6A0]/50">
+              {item.service}
+            </span>
 
-      <div className="mt-6 flex items-center gap-3 border-t border-white/5 pt-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#D4AF37]/20 text-sm font-bold text-[#D4AF37]">
-          {item.name.charAt(0)}
+            {item.highlight && (
+              <span className="rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/10 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-[#D4AF37]">
+                Featured
+              </span>
+            )}
+          </div>
         </div>
 
-        <div>
-          <h4 className="text-sm font-semibold text-white">{item.name}</h4>
+        {/* Review text */}
+        <p className="relative grow text-sm leading-7 text-[#F2D6A0]/75">
+          &ldquo;{item.text}&rdquo;
+        </p>
 
-          <p className="text-xs text-[#F2D6A0]/50">{item.role}</p>
+        {/* Stars */}
+        <div className="relative mt-5 flex gap-0.5">
+          {Array.from({ length: item.rating }).map((_, si) => (
+            <Star
+              key={si}
+              size={13}
+              fill="currentColor"
+              className="text-[#D4AF37]"
+            />
+          ))}
+        </div>
+
+        {/* Author */}
+        <div className="relative mt-4 flex items-center gap-3 border-t border-white/10 pt-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#F2D6A0] via-[#D4AF37] to-[#B76E79] text-sm font-bold text-black">
+            {item.name[0]}
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold text-white">{item.name}</h4>
+            <p className="text-xs text-[#F2D6A0]/50">{item.location}</p>
+          </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
-export default function Testimonials() {
-  const visibleCount = useVisibleCount();
-  const shouldReduceMotion = useReducedMotion() ?? false;
-
+function Testimonials() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-
-  const isPaused = useRef(false);
-
+  const visibleCount = useVisibleCount();
+  const pauseRef = useRef(false);
   const totalGroups = Math.ceil(testimonials.length / visibleCount);
 
   useEffect(() => {
@@ -168,22 +168,16 @@ export default function Testimonials() {
   const go = useCallback(
     (dir: 1 | -1) => {
       setDirection(dir);
-
-      setIndex((prev) => {
-        return (prev + dir + totalGroups) % totalGroups;
-      });
+      setIndex((prev) => (prev + dir + totalGroups) % totalGroups);
     },
     [totalGroups],
   );
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isPaused.current) {
-        go(1);
-      }
+    const timer = setInterval(() => {
+      if (!pauseRef.current) go(1);
     }, AUTO_DELAY);
-
-    return () => clearInterval(interval);
+    return () => clearInterval(timer);
   }, [go]);
 
   const visibleTestimonials = testimonials.slice(
@@ -194,97 +188,160 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden py-12 sm:py-16"
-      onMouseEnter={() => (isPaused.current = true)}
-      onMouseLeave={() => (isPaused.current = false)}
-      onTouchStart={() => (isPaused.current = true)}
-      onTouchEnd={() => (isPaused.current = false)}
+      className="relative overflow-hidden py-6 lg:py-8"
+      onMouseEnter={() => {
+        pauseRef.current = true;
+      }}
+      onMouseLeave={() => {
+        pauseRef.current = false;
+      }}
     >
+      {/* Background glow */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#D4AF37]/5 blur-[100px]" />
+
       <div className="section-container relative z-10">
-        {/* Header */}
+        {/* ── Header ── */}
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mx-auto mb-10 max-w-2xl text-center"
+          transition={{ duration: 0.55 }}
+          className="mb-12 text-center"
         >
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37]">
-            Testimonials
-          </span>
+          {/* Ornament */}
+          <div className="mb-4 flex items-center justify-center gap-3">
+            <span className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#D4AF37]">
+              Client Stories
+            </span>
+            <span className="h-px w-10 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+          </div>
 
-          <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-            Trusted by clients across India
+          <h2 className="text-3xl font-semibold text-white lg:text-4xl">
+            Real people.{" "}
+            <span className="bg-gradient-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] bg-clip-text text-transparent">
+              Real clarity.
+            </span>
           </h2>
+
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#F2D6A0]/55">
+            Over 5,000 clients have found direction through personalised
+            consultations. Here's what a few of them had to say.
+          </p>
+
+          {/* Aggregate rating */}
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/20 bg-[#D4AF37]/8 px-4 py-1.5">
+            <span className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  size={12}
+                  fill="currentColor"
+                  className="text-[#D4AF37]"
+                />
+              ))}
+            </span>
+            <span className="text-xs font-semibold text-white">5.0</span>
+            <span className="text-xs text-[#F2D6A0]/50">
+              · 5,000+ consultations
+            </span>
+          </div>
         </motion.div>
 
-        {/* Controls */}
-        {totalGroups > 1 && (
-          <div className="mb-6 flex justify-end gap-2">
-            <button
-              onClick={() => go(-1)}
-              aria-label="Previous testimonials"
-              className="rounded-full border border-white/10 p-2 text-white transition-all hover:border-[#D4AF37]"
-            >
-              <ChevronLeft size={18} />
-            </button>
-
-            <button
-              onClick={() => go(1)}
-              aria-label="Next testimonials"
-              className="rounded-full border border-white/10 p-2 text-white transition-all hover:border-[#D4AF37]"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        )}
-
-        {/* Carousel */}
+        {/* ── Carousel wrapper ── */}
         <div className="relative">
+          {/* Nav buttons */}
+          {totalGroups > 1 && (
+            <>
+              <button
+                onClick={() => go(-1)}
+                aria-label="Previous testimonials"
+                className="absolute -left-5 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md transition hover:border-[#D4AF37]/40 hover:bg-white/[0.06] md:flex"
+              >
+                <ChevronLeft size={18} className="text-[#F2D6A0]" />
+              </button>
+
+              <button
+                onClick={() => go(1)}
+                aria-label="Next testimonials"
+                className="absolute -right-5 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md transition hover:border-[#D4AF37]/40 hover:bg-white/[0.06] md:flex"
+              >
+                <ChevronRight size={18} className="text-[#F2D6A0]" />
+              </button>
+            </>
+          )}
+
+          {/* Slides */}
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={`${index}-${visibleCount}`}
               custom={direction}
               variants={slideVariants}
-              initial={shouldReduceMotion ? false : "enter"}
+              initial="enter"
               animate="center"
               exit="exit"
-              className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+              className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
             >
-              {visibleTestimonials.map((item) => (
-                <TestimonialCard
-                  key={`${item.name}-${item.role}`}
-                  item={item}
-                />
+              {visibleTestimonials.map((item, i) => (
+                <TestimonialCard key={`${item.name}-${i}`} item={item} i={i} />
               ))}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Dots */}
+        {/* ── Dot indicators ── */}
         {totalGroups > 1 && (
-          <div className="mt-8 flex justify-center gap-2">
-            {Array.from({
-              length: totalGroups,
-            }).map((_, dotIndex) => (
+          <div className="mt-8 flex items-center justify-center gap-2">
+            {Array.from({ length: totalGroups }).map((_, dotIndex) => (
               <button
                 key={dotIndex}
-                aria-label={`Go to testimonial group ${dotIndex + 1}`}
-                aria-current={dotIndex === index}
                 onClick={() => {
                   setDirection(dotIndex > index ? 1 : -1);
                   setIndex(dotIndex);
                 }}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  dotIndex === index
-                    ? "w-8 bg-[#D4AF37]"
-                    : "w-2 bg-[#F2D6A0]/20 hover:bg-[#F2D6A0]/40"
-                }`}
-              />
+                aria-label={`Go to slide ${dotIndex + 1}`}
+                className="flex h-6 w-6 items-center justify-center"
+              >
+                <span
+                  className={`block rounded-full transition-all duration-300 ${
+                    dotIndex === index
+                      ? "h-2 w-7 bg-[#D4AF37]"
+                      : "h-2 w-2 bg-white/20 hover:bg-white/35"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         )}
+
+        {/* ── Bottom CTA strip ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mt-12 flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md sm:flex-row"
+        >
+          <div className="text-center sm:text-left">
+            <p className="font-semibold text-white">
+              Ready to find your clarity?
+            </p>
+            <p className="mt-0.5 text-sm text-[#F2D6A0]/55">
+              Join thousands who've already taken the first step.
+            </p>
+          </div>
+          <a
+            href="https://wa.me/917385803537"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] px-6 py-2.5 text-sm font-bold text-black shadow-[0_0_28px_rgba(212,175,55,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(212,175,55,0.35)]"
+          >
+            Book Your Consultation
+          </a>
+        </motion.div>
       </div>
     </section>
   );
 }
+
+export default memo(Testimonials);
