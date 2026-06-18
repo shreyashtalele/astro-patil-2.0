@@ -237,7 +237,7 @@ export default function Hero() {
           </a>
         </motion.div>
 
-        {/* Stats */}
+        /* {/* Stats */}
         <motion.div
           {...fadeUp(0.35)}
           className="stats-grid"
@@ -299,7 +299,7 @@ export default function Hero() {
               </div>
             </div>
           ))}
-        </motion.div>
+        </motion.div> */
       </div>
     </section>
   );
