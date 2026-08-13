@@ -1,3 +1,4 @@
+// app/components/layout/Footer.tsx
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
@@ -8,11 +9,9 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import type { ReactNode } from "react";
+import { SITE_CONFIG } from "@/app/data/config";
+import { navLinks, serviceLinks } from "@/app/data/navigation";
 
-const PHONE = "+91 73858 03537";
-const EMAIL = "astropatilofficial@gmail.com";
-
-type NavLink = { label: string; href: string };
 type SocialLink = {
   label: string;
   href: string;
@@ -21,52 +20,36 @@ type SocialLink = {
   hoverClass: string;
 };
 
-const navLinks: NavLink[] = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Contact", href: "#contact" },
-];
-
-const serviceLinks: NavLink[] = [
-  { label: "Kundli Reading", href: "#services" },
-  { label: "Marriage Compatibility", href: "#services" },
-  { label: "Career Guidance", href: "#services" },
-  { label: "Vastu Consultation", href: "#services" },
-  { label: "Numerology", href: "#services" },
-];
-
 const socialLinks: SocialLink[] = [
   {
     label: "WhatsApp",
-    href: "https://wa.me/917385803537",
+    href: SITE_CONFIG.whatsapp,
     icon: <FaWhatsapp size={17} />,
     hoverClass: "hover:text-[#25D366] hover:border-[#25D366]/30",
     external: true,
   },
   {
     label: "Call",
-    href: "tel:+917385803537",
+    href: `tel:${SITE_CONFIG.phone}`,
     icon: <FaPhoneAlt size={13} />,
     hoverClass: "hover:text-[#D4AF37] hover:border-[#D4AF37]/30",
   },
   {
     label: "Email",
-    href: `mailto:${EMAIL}`,
+    href: `mailto:${SITE_CONFIG.email}`,
     icon: <FaEnvelope size={14} />,
     hoverClass: "hover:text-[#D4AF37] hover:border-[#D4AF37]/30",
   },
   {
     label: "Instagram",
-    href: "https://instagram.com/astropatil_",
+    href: SITE_CONFIG.instagram,
     icon: <FaInstagram size={15} />,
     hoverClass: "hover:text-[#E1306C] hover:border-[#E1306C]/30",
     external: true,
   },
   {
     label: "AstroTalk",
-    href: "https://chat.astrotalk.com/BnlV/j0phqq83?slug=Trishit",
+    href: SITE_CONFIG.astrotalk,
     icon: <span className="text-[10px] font-bold">AT</span>,
     hoverClass: "hover:text-[#FF6B35] hover:border-[#FF6B35]/30",
     external: true,
@@ -96,15 +79,15 @@ export default function Footer() {
   const shouldReduceMotion = useReducedMotion() ?? false;
 
   return (
-    <footer className="border-t border-white/[0.06] bg-[#0B0B1A]">
-      <div className="py-4 sm:py-5">
+    <footer className="border-t border-white/6 bg-[#0B0B1A]">
+      <div className="section-container py-8 sm:py-10">
         <motion.div
           variants={fadeUp}
           initial={shouldReduceMotion ? false : "hidden"}
           whileInView="visible"
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="grid gap-10 border-b border-white/[0.06] pb-10 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-8 border-b border-white/6 pb-8 sm:grid-cols-2 lg:grid-cols-4"
         >
           {/* ── Brand column ── */}
           <div className="sm:col-span-2 lg:col-span-1">
@@ -114,7 +97,7 @@ export default function Footer() {
                 ॐ
               </div>
               <span className="text-sm font-bold tracking-[0.2em] text-white">
-                ASTRO PATIL
+                {SITE_CONFIG.name.toUpperCase()}
               </span>
             </div>
 
@@ -125,20 +108,20 @@ export default function Footer() {
             </p>
 
             {/* Contact lines */}
-            <div className="mt-5 space-y-2">
+            <div className="mt-4 space-y-2">
               <a
-                href="tel:+917385803537"
+                href={`tel:${SITE_CONFIG.phone}`}
                 className="flex items-center gap-2 text-xs text-[#F2D6A0]/50 transition-colors hover:text-[#D4AF37]"
               >
                 <FaPhoneAlt size={11} className="text-[#D4AF37]" />
-                {PHONE}
+                {SITE_CONFIG.phone}
               </a>
               <a
-                href={`mailto:${EMAIL}`}
+                href={`mailto:${SITE_CONFIG.email}`}
                 className="flex items-center gap-2 text-xs text-[#F2D6A0]/50 transition-colors hover:text-[#D4AF37]"
               >
                 <FaEnvelope size={11} className="text-[#D4AF37]" />
-                {EMAIL}
+                {SITE_CONFIG.email}
               </a>
             </div>
           </div>
@@ -148,10 +131,7 @@ export default function Footer() {
             <h4 className="mb-4 text-[10px] font-bold uppercase tracking-[0.22em] text-[#D4AF37]">
               Navigation
             </h4>
-            <nav
-              aria-label="Footer navigation"
-              className="flex flex-col gap-2.5"
-            >
+            <nav aria-label="Footer navigation" className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <a
                   key={link.href + link.label}
@@ -169,7 +149,7 @@ export default function Footer() {
             <h4 className="mb-4 text-[10px] font-bold uppercase tracking-[0.22em] text-[#D4AF37]">
               Services
             </h4>
-            <ul className="flex flex-col gap-2.5">
+            <ul className="flex flex-col gap-2">
               {serviceLinks.map((link) => (
                 <li key={link.label}>
                   <a
@@ -197,10 +177,10 @@ export default function Footer() {
 
             {/* WhatsApp prompt */}
             <a
-              href="https://wa.me/917385803537"
+              href={SITE_CONFIG.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 flex items-center gap-2 rounded-xl border border-[#D4AF37]/20 bg-[#D4AF37]/8 px-4 py-2.5 text-xs font-semibold text-[#D4AF37] transition-all duration-300 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/14"
+              className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-[#D4AF37]/20 bg-[#D4AF37]/8 px-4 py-2.5 text-xs font-semibold text-[#D4AF37] transition-all duration-300 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/14"
             >
               <FaWhatsapp size={14} />
               Book via WhatsApp
@@ -211,7 +191,8 @@ export default function Footer() {
         {/* ── Bottom bar ── */}
         <div className="flex flex-col items-center justify-between gap-3 pt-6 sm:flex-row">
           <p className="text-[10px] text-[#F2D6A0]/28">
-            © {new Date().getFullYear()} Astro Patil. All rights reserved.
+            © {new Date().getFullYear()} {SITE_CONFIG.name}. All rights
+            reserved.
           </p>
 
           {/* Ornament */}
@@ -224,7 +205,7 @@ export default function Footer() {
           </div>
 
           <p className="text-[10px] text-[#F2D6A0]/28">
-            Pune, Maharashtra, India
+            {SITE_CONFIG.location}
           </p>
         </div>
       </div>

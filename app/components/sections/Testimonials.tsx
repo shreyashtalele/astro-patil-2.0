@@ -1,55 +1,11 @@
+// app/components/sections/Testimonials.tsx
 "use client";
 
 import { useCallback, useEffect, useRef, useState, memo } from "react";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
-
-const testimonials = [
-  {
-    name: "Aans",
-    location: "Mumbai",
-    service: "Life Guidance",
-    text: "The consultation gave me real clarity during one of the most difficult phases of my life. The guidance was practical, grounded, and surprisingly accurate.",
-    rating: 5,
-  },
-  {
-    name: "Navid",
-    location: "Pune",
-    service: "Kundli Reading",
-    text: "Incredibly detailed reading with predictions that matched my situation almost exactly. I was genuinely taken aback by the accuracy.",
-    rating: 5,
-    highlight: true,
-  },
-  {
-    name: "Samachan",
-    location: "Nagpur",
-    service: "Career Guidance",
-    text: "Made a major career decision with full confidence after this session. The clarity I got was something I couldn't find anywhere else.",
-    rating: 5,
-  },
-  {
-    name: "Priya",
-    location: "Mumbai",
-    service: "Marriage Compatibility",
-    text: "The kundli matching gave us both genuine reassurance before our wedding. Every concern was addressed thoughtfully and without judgment.",
-    rating: 5,
-  },
-  {
-    name: "Rohit",
-    location: "Nashik",
-    service: "Vastu Consultation",
-    text: "Professional, fully confidential, and very accurate. The Vastu remedies suggested were simple to follow and made a real difference.",
-    rating: 5,
-  },
-  {
-    name: "Sneha",
-    location: "Delhi",
-    service: "Finance Guidance",
-    text: "Every question answered with patience and depth. Left the session with a completely different perspective on my financial situation.",
-    rating: 5,
-    highlight: true,
-  },
-];
+import { testimonials } from "@/app/data/testimonials";
+import { SITE_CONFIG } from "@/app/data/config";
 
 const AUTO_DELAY = 5000;
 
@@ -98,7 +54,7 @@ function TestimonialCard({
         <div className="absolute -inset-2 rounded-2xl bg-[#D4AF37]/10 blur-2xl opacity-60 pointer-events-none" />
       )}
 
-      <div className="relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D4AF37]/30">
+      <div className="relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/3 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D4AF37]/30">
         {/* Radial inner glow */}
         <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.08),transparent_65%)] opacity-80" />
 
@@ -110,7 +66,7 @@ function TestimonialCard({
 
           <div className="flex items-center gap-2">
             {/* Service tag */}
-            <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-[#F2D6A0]/50">
+            <span className="rounded-full border border-white/10 bg-white/4 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-[#F2D6A0]/50">
               {item.service}
             </span>
 
@@ -141,7 +97,7 @@ function TestimonialCard({
 
         {/* Author */}
         <div className="relative mt-4 flex items-center gap-3 border-t border-white/10 pt-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#F2D6A0] via-[#D4AF37] to-[#B76E79] text-sm font-bold text-black">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#F2D6A0] via-[#D4AF37] to-[#B76E79] text-sm font-bold text-black">
             {item.name[0]}
           </div>
           <div>
@@ -197,7 +153,7 @@ function Testimonials() {
       }}
     >
       {/* Background glow */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#D4AF37]/5 blur-[100px]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-100 w-100 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#D4AF37]/5 blur-[100px]" />
 
       <div className="section-container relative z-10">
         {/* ── Header ── */}
@@ -210,16 +166,16 @@ function Testimonials() {
         >
           {/* Ornament */}
           <div className="mb-4 flex items-center justify-center gap-3">
-            <span className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+            <span className="h-px w-10 bg-linear-to-r from-transparent to-[#D4AF37]" />
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#D4AF37]">
               Client Stories
             </span>
-            <span className="h-px w-10 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            <span className="h-px w-10 bg-linear-to-l from-transparent to-[#D4AF37]" />
           </div>
 
           <h2 className="text-3xl font-semibold text-white lg:text-4xl">
             Real people.{" "}
-            <span className="bg-gradient-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] bg-clip-text text-transparent">
               Real clarity.
             </span>
           </h2>
@@ -243,7 +199,7 @@ function Testimonials() {
             </span>
             <span className="text-xs font-semibold text-white">5.0</span>
             <span className="text-xs text-[#F2D6A0]/50">
-              · 5,000+ consultations
+              · {SITE_CONFIG.stats.clients} consultations
             </span>
           </div>
         </motion.div>
@@ -256,7 +212,7 @@ function Testimonials() {
               <button
                 onClick={() => go(-1)}
                 aria-label="Previous testimonials"
-                className="absolute -left-5 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md transition hover:border-[#D4AF37]/40 hover:bg-white/[0.06] md:flex"
+                className="absolute -left-5 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/3 backdrop-blur-md transition hover:border-[#D4AF37]/40 hover:bg-white/6 md:flex"
               >
                 <ChevronLeft size={18} className="text-[#F2D6A0]" />
               </button>
@@ -264,7 +220,7 @@ function Testimonials() {
               <button
                 onClick={() => go(1)}
                 aria-label="Next testimonials"
-                className="absolute -right-5 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md transition hover:border-[#D4AF37]/40 hover:bg-white/[0.06] md:flex"
+                className="absolute -right-5 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/3 backdrop-blur-md transition hover:border-[#D4AF37]/40 hover:bg-white/6 md:flex"
               >
                 <ChevronRight size={18} className="text-[#F2D6A0]" />
               </button>
@@ -320,7 +276,7 @@ function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="mt-12 flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md sm:flex-row"
+          className="mt-12 flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/3 p-6 backdrop-blur-md sm:flex-row"
         >
           <div className="text-center sm:text-left">
             <p className="font-semibold text-white">
@@ -331,10 +287,10 @@ function Testimonials() {
             </p>
           </div>
           <a
-            href="https://wa.me/917385803537"
+            href={SITE_CONFIG.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] px-6 py-2.5 text-sm font-bold text-black shadow-[0_0_28px_rgba(212,175,55,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(212,175,55,0.35)]"
+            className="shrink-0 rounded-full bg-linear-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] px-6 py-2.5 text-sm font-bold text-black shadow-[0_0_28px_rgba(212,175,55,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(212,175,55,0.35)]"
           >
             Book Your Consultation
           </a>

@@ -10,13 +10,8 @@ import {
   ArrowRight,
   type LucideIcon,
 } from "lucide-react";
-
-type Service = {
-  title: string;
-  desc: string;
-  image: string;
-  tag?: string;
-};
+import { services } from "@/app/data/services";
+import { SITE_CONFIG } from "@/app/data/config";
 
 type TrustItem = {
   icon: LucideIcon;
@@ -24,64 +19,13 @@ type TrustItem = {
   value: string;
 };
 
-const services: Service[] = [
-  {
-    title: "Kundli Reading",
-    desc: "In-depth birth chart analysis to uncover life patterns, strengths, karmic lessons, and future possibilities.",
-    image: "/image/kundalireading.png",
-    tag: "Most Popular",
-  },
-  {
-    title: "Marriage Compatibility",
-    desc: "Detailed kundli matching to evaluate emotional, mental, and spiritual compatibility before you commit.",
-    image: "/image/marraige.png",
-    tag: "High Demand",
-  },
-  {
-    title: "Career & Education",
-    desc: "Clarity on job switches, promotions, and academic direction based on your planetary strengths.",
-    image: "/image/career.png",
-  },
-  {
-    title: "Finance Guidance",
-    desc: "Astrological insight into income, savings, investment timing, and breaking financial blocks.",
-    image: "/image/finance.png",
-  },
-  {
-    title: "Vastu Consultation",
-    desc: "Align your home or workspace with Vastu principles to invite positivity, growth, and harmony.",
-    image: "/image/vastu.png",
-  },
-  {
-    title: "Numerology",
-    desc: "Discover your life path and destiny numbers — and how they shape your decisions and success.",
-    image: "/image/numerology.png",
-  },
-  {
-    title: "Muhurta",
-    desc: "Find the most auspicious moment for weddings, business launches, travel, and major milestones.",
-    image: "/image/muhurta.png",
-  },
-  {
-    title: "Palmistry",
-    desc: "Hand analysis to reveal personality, life direction, health indicators, and hidden potential.",
-    image: "/image/palmistry.png",
-  },
-  {
-    title: "Face Reading",
-    desc: "Understand behaviour patterns, emotional tendencies, and life themes through facial analysis.",
-    image: "/image/facereading.png",
-  },
-  {
-    title: "Money & Growth",
-    desc: "Identify financial blocks, map money flow cycles, and spot the right windows for growth.",
-    image: "/image/money.png",
-  },
-];
-
 const trustItems: TrustItem[] = [
-  { icon: Sparkles, value: "9+", label: "Years Experience" },
-  { icon: Users, value: "5,000+", label: "Clients Guided" },
+  {
+    icon: Sparkles,
+    value: SITE_CONFIG.stats.experience,
+    label: "Years Experience",
+  },
+  { icon: Users, value: SITE_CONFIG.stats.clients, label: "Clients Guided" },
   { icon: CheckCircle, value: "Root", label: "Cause Analysis" },
   { icon: Lock, value: "100%", label: "Confidential" },
 ];
@@ -96,7 +40,7 @@ function ServiceCard({
   index,
   reduceMotion,
 }: {
-  service: Service;
+  service: (typeof services)[0];
   index: number;
   reduceMotion: boolean;
 }) {
@@ -111,15 +55,20 @@ function ServiceCard({
     >
       {/* Image */}
       <div className="relative h-44 overflow-hidden">
+        // app/components/sections/Services.tsx // Update the Image component
+        with proper optimization
         <Image
           src={service.image}
           alt={service.title}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
+          quality={80}
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k="
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#171124] via-[#171124]/20 to-transparent" />
-
+        <div className="absolute inset-0 bg-linear-to-t from-[#171124] via-[#171124]/20 to-transparent" />
         {/* Optional tag */}
         {service.tag && (
           <span className="absolute left-3 top-3 rounded-full border border-[#D4AF37]/30 bg-black/50 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#D4AF37] backdrop-blur-sm">
@@ -137,7 +86,7 @@ function ServiceCard({
 
         {/* CTA link */}
         <a
-          href="https://wa.me/917385803537"
+          href={SITE_CONFIG.whatsapp}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#D4AF37] opacity-0 transition-all duration-300 group-hover:opacity-100"
@@ -157,7 +106,7 @@ export default function Services() {
     <section id="services" className="relative py-6 lg:py-8">
       {/* Background accent */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute right-0 top-1/3 h-[500px] w-[500px] rounded-full bg-[#D4AF37]/4 blur-[140px]" />
+        <div className="absolute right-0 top-1/3 h-125 w-125 rounded-full bg-[#D4AF37]/4 blur-[140px]" />
       </div>
 
       <div className="section-container relative z-10">
@@ -176,15 +125,15 @@ export default function Services() {
             </span>
             <h2 className="mt-3 text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">
               Services for every
-              <span className="block bg-gradient-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] bg-clip-text text-transparent">
+              <span className="block bg-linear-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] bg-clip-text text-transparent">
                 important life decision
               </span>
             </h2>
           </div>
 
-          {/* Section-level CTA — visible on md+ */}
+          {/* Section-level CTA */}
           <a
-            href="https://wa.me/917385803537"
+            href={SITE_CONFIG.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden shrink-0 items-center gap-2 rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/8 px-5 py-2.5 text-sm font-semibold text-[#D4AF37] transition-all duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/15 md:inline-flex"
@@ -197,7 +146,7 @@ export default function Services() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {services.map((service, index) => (
             <ServiceCard
-              key={service.title}
+              key={service.id}
               service={service}
               index={index}
               reduceMotion={reduceMotion}
@@ -206,7 +155,7 @@ export default function Services() {
 
           {/* Final CTA tile */}
           <motion.a
-            href="https://wa.me/917385803537"
+            href={SITE_CONFIG.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             variants={fadeUp}
@@ -214,7 +163,7 @@ export default function Services() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.5, delay: services.length * 0.04 }}
-            className="group flex flex-col items-center justify-center gap-4 rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#D4AF37]/10 to-[#D4AF37]/4 p-8 text-center transition-all duration-300 hover:border-[#D4AF37]/45 hover:from-[#D4AF37]/15 hover:to-[#D4AF37]/8 sm:col-span-2 lg:col-span-1 xl:col-span-1"
+            className="group flex flex-col items-center justify-center gap-4 rounded-2xl border border-[#D4AF37]/20 bg-linear-to-br from-[#D4AF37]/10 to-[#D4AF37]/4 p-8 text-center transition-all duration-300 hover:border-[#D4AF37]/45 hover:from-[#D4AF37]/15 hover:to-[#D4AF37]/8 sm:col-span-2 lg:col-span-1 xl:col-span-1"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/15">
               <Sparkles size={20} className="text-[#D4AF37]" />
@@ -226,7 +175,7 @@ export default function Services() {
                 together.
               </p>
             </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F2D6A0] px-4 py-1.5 text-xs font-bold text-black transition-transform duration-200 group-hover:scale-105">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-[#D4AF37] to-[#F2D6A0] px-4 py-1.5 text-xs font-bold text-black transition-transform duration-200 group-hover:scale-105">
               Talk to Me <ArrowRight size={11} strokeWidth={3} />
             </span>
           </motion.a>

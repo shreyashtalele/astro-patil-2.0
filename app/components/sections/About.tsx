@@ -10,6 +10,7 @@ import {
   CheckCircle,
   type LucideIcon,
 } from "lucide-react";
+import { aboutData } from "@/app/data/about";
 
 type Stat = {
   icon: LucideIcon;
@@ -17,21 +18,21 @@ type Stat = {
   label: string;
 };
 
-const stats: Stat[] = [
-  { icon: Clock, value: "9+", label: "Years Experience" },
-  { icon: Users, value: "5,000+", label: "Clients Guided" },
-  { icon: Sparkles, value: "20+", label: "Years Legacy" },
-];
+// Map icon strings to actual Lucide icons
+const iconMap: Record<string, LucideIcon> = {
+  Clock,
+  Users,
+  Sparkles,
+};
 
-const highlights = [
-  "Vedic birth chart & transit readings",
-  "Marriage compatibility (Kundali Milan)",
-  "Vastu analysis for home & office",
-  "Numerology & name correction",
-];
-
-function StatCard({ stat, index }: { stat: Stat; index: number }) {
-  const Icon = stat.icon;
+function StatCard({
+  stat,
+  index,
+}: {
+  stat: { icon: string; value: string; label: string };
+  index: number;
+}) {
+  const Icon = iconMap[stat.icon] || Sparkles;
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -58,7 +59,7 @@ export default function About() {
     <section id="about" className="relative py-6 lg:py-8">
       {/* Subtle background accent */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute left-0 top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-[#D4AF37]/4 blur-[120px]" />
+        <div className="absolute left-0 top-1/2 h-100 w-100 -translate-y-1/2 rounded-full bg-[#D4AF37]/4 blur-[120px]" />
       </div>
 
       <div className="section-container relative z-10">
@@ -72,11 +73,12 @@ export default function About() {
             className="relative mx-auto w-full max-w-72 md:max-w-sm"
           >
             {/* Gold border gradient frame */}
-            <div className="rounded-2xl bg-gradient-to-br from-[#D4AF37]/25 via-[#D4AF37]/5 to-transparent p-px">
+            <div className="rounded-2xl bg-linear-to-br from-[#D4AF37]/25 via-[#D4AF37]/5 to-transparent p-px">
               <div className="overflow-hidden rounded-2xl bg-[#0d0b1a]">
                 <div className="relative aspect-3/4">
+                  // app/components/sections/About.tsx
                   <Image
-                    src="/image/Image.png"
+                    src="/images/Image.webp" // ✅ Change .png to .webp
                     alt="Astro Patil — Vedic Astrologer"
                     fill
                     priority
@@ -116,28 +118,21 @@ export default function About() {
             {/* Heading */}
             <h2 className="mt-3 text-3xl font-bold leading-tight text-white md:text-4xl">
               Where Logic Meets
-              <span className="block bg-gradient-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] bg-clip-text text-transparent">
+              <span className="block bg-linear-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] bg-clip-text text-transparent">
                 Ancestral Wisdom
               </span>
             </h2>
 
-            {/* Bio */}
+            {/* Bio - Using data */}
             <div className="mt-5 space-y-3.5 text-sm leading-relaxed text-[#F2D6A0]/70 md:text-base">
-              <p>
-                I'm a Software Engineer turned dedicated Astrologer — a rare
-                combination that brings both rigorous analytical thinking and
-                deep spiritual understanding to every consultation.
-              </p>
-              <p>
-                With 9+ years of practice built on a 20-year family legacy, I
-                deliver Vedic readings that are grounded, practical, and
-                genuinely personalised — not generic forecasts.
-              </p>
+              {aboutData.bio.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
             </div>
 
-            {/* Highlights checklist */}
+            {/* Highlights checklist - Using data */}
             <ul className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {highlights.map((item) => (
+              {aboutData.highlights.map((item) => (
                 <li
                   key={item}
                   className="flex items-start gap-2 text-sm text-[#F2D6A0]/65"
@@ -151,9 +146,9 @@ export default function About() {
               ))}
             </ul>
 
-            {/* Stats */}
+            {/* Stats - Using data */}
             <div className="mt-8 grid grid-cols-3 gap-3">
-              {stats.map((stat, i) => (
+              {aboutData.stats.map((stat, i) => (
                 <StatCard key={stat.label} stat={stat} index={i} />
               ))}
             </div>

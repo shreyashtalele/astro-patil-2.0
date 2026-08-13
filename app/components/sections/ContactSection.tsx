@@ -1,3 +1,4 @@
+// app/components/sections/ContactSection.tsx
 "use client";
 
 import { useState, useCallback } from "react";
@@ -11,8 +12,7 @@ import {
   Clock,
   type LucideIcon,
 } from "lucide-react";
-
-const WHATSAPP_NUMBER = "917385803537";
+import { SITE_CONFIG } from "@/app/data/config";
 
 type ContactItem = {
   icon: LucideIcon;
@@ -25,19 +25,19 @@ const contactItems: ContactItem[] = [
   {
     icon: Phone,
     label: "Call / WhatsApp",
-    value: "+91 73858 03537",
-    href: "tel:+917385803537",
+    value: SITE_CONFIG.phone,
+    href: `tel:${SITE_CONFIG.phone}`,
   },
   {
     icon: Mail,
     label: "Email",
-    value: "astropatilofficial@gmail.com",
-    href: "mailto:astropatilofficial@gmail.com",
+    value: SITE_CONFIG.email,
+    href: `mailto:${SITE_CONFIG.email}`,
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "Pune, Maharashtra, India",
+    value: SITE_CONFIG.location,
     href: "#",
   },
   {
@@ -46,19 +46,6 @@ const contactItems: ContactItem[] = [
     value: "Usually within a few hours",
     href: "#",
   },
-];
-
-const services = [
-  "Kundli Reading",
-  "Marriage Compatibility",
-  "Career Guidance",
-  "Vastu Consultation",
-  "Numerology",
-  "Face Reading",
-  "Palmistry",
-  "Finance Guidance",
-  "Muhurta",
-  "Money & Growth",
 ];
 
 const inputStyles =
@@ -95,10 +82,13 @@ export default function ContactSection() {
 
     setSuccess(true);
     window.open(
-      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,
+      `${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(text)}`,
       "_blank",
     );
     e.currentTarget.reset();
+
+    // Clear success message after 5 seconds
+    setTimeout(() => setSuccess(false), 5000);
   }, []);
 
   return (
@@ -144,7 +134,7 @@ export default function ContactSection() {
             className="flex flex-col gap-4 lg:col-span-2"
           >
             {/* Contact cards */}
-            <div className="space-y-3">
+            <div className="space-y-3" role="list">
               {contactItems.map((item) => {
                 const Icon = item.icon;
                 const isLink = item.href !== "#";
@@ -155,6 +145,7 @@ export default function ContactSection() {
                     key={item.label}
                     {...(isLink ? { href: item.href } : {})}
                     className="flex items-center gap-4 rounded-xl border border-white/10 bg-[#171124] p-4 transition-all duration-300 hover:border-[#D4AF37]/30"
+                    role="listitem"
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#D4AF37]/20 bg-[#D4AF37]/10">
                       <Icon size={17} className="text-[#D4AF37]" />
@@ -174,9 +165,10 @@ export default function ContactSection() {
 
             {/* WhatsApp CTA */}
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              href={SITE_CONFIG.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Chat on WhatsApp"
               className="mt-1 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#F2D6A0] to-[#D4AF37] py-3.5 text-sm font-bold text-black shadow-[0_0_32px_rgba(212,175,55,0.2)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_44px_rgba(212,175,55,0.35)]"
             >
               <MessageCircle size={17} strokeWidth={2.5} />
@@ -189,7 +181,7 @@ export default function ContactSection() {
             </p>
           </motion.div>
 
-          {/* ── Right: form ── */}
+          {/* ── Right: Form with accessibility improvements ── */}
           <motion.form
             variants={fadeUp}
             initial={shouldReduceMotion ? false : "hidden"}
@@ -198,97 +190,119 @@ export default function ContactSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             onSubmit={handleWhatsApp}
             className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#171124]/50 p-6 backdrop-blur-sm lg:col-span-3"
+            noValidate
+            aria-label="Contact form"
           >
             <p className="mb-1 text-sm font-semibold text-white">
               Send a message
             </p>
 
-            {/* Name + phone row */}
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="name"
-                  className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
-                >
-                  Your Name
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  placeholder="e.g. Priya Sharma"
-                  className={inputStyles}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="phone"
-                  className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
-                >
-                  Mobile Number
-                </label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="+91 98765 43210"
-                  className={inputStyles}
-                />
-              </div>
-            </div>
+            {/* ✅ Fieldset for grouping form fields */}
+            <fieldset>
+              <legend className="sr-only">Contact Information</legend>
 
-            {/* Service */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="service"
-                className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
-              >
-                Service Interested In
-              </label>
-              <select
-                id="service"
-                name="service"
-                defaultValue=""
-                className={`${inputStyles} cursor-pointer`}
-              >
-                <option value="" disabled>
-                  Select a service…
-                </option>
-                {services.map((s) => (
-                  <option key={s} value={s} className="bg-[#171124]">
-                    {s}
+              {/* Name + phone row */}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="name"
+                    className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
+                  >
+                    Your Name <span className="text-[#D4AF37]">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    aria-required="true"
+                    placeholder="e.g. Priya Sharma"
+                    className={inputStyles}
+                    autoComplete="name"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="phone"
+                    className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
+                  >
+                    Mobile Number <span className="text-[#D4AF37]">*</span>
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    aria-required="true"
+                    placeholder="+91 98765 43210"
+                    className={inputStyles}
+                    autoComplete="tel"
+                  />
+                </div>
+              </div>
+
+              {/* Service */}
+              <div className="flex flex-col gap-1 mt-3">
+                <label
+                  htmlFor="service"
+                  className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
+                >
+                  Service Interested In{" "}
+                  <span className="text-[#D4AF37]">*</span>
+                </label>
+                <select
+                  id="service"
+                  name="service"
+                  aria-required="true"
+                  defaultValue=""
+                  className={`${inputStyles} cursor-pointer`}
+                >
+                  <option value="" disabled>
+                    Select a service…
                   </option>
-                ))}
-              </select>
-            </div>
+                  {SITE_CONFIG.services.map((s) => (
+                    <option key={s} value={s} className="bg-[#171124]">
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Message */}
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="message"
-                className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
-              >
-                Your Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                rows={5}
-                placeholder="Briefly describe what you'd like guidance on…"
-                className={`${inputStyles} resize-none`}
-              />
-            </div>
+              {/* Message */}
+              <div className="flex flex-col gap-1 mt-3">
+                <label
+                  htmlFor="message"
+                  className="text-[11px] uppercase tracking-wider text-[#F2D6A0]/45"
+                >
+                  Your Message <span className="text-[#D4AF37]">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={5}
+                  aria-required="true"
+                  placeholder="Briefly describe what you'd like guidance on…"
+                  className={`${inputStyles} resize-none`}
+                />
+              </div>
+            </fieldset>
 
-            {/* Feedback */}
-            {error && <p className="text-sm text-red-400">{error}</p>}
-            {success && (
-              <p className="text-sm text-green-400">
-                Opening WhatsApp — see you there!
+            {/* ✅ Error message with role="alert" */}
+            {error && (
+              <p id="form-error" role="alert" className="text-sm text-red-400">
+                {error}
               </p>
             )}
 
-            {/* Submit */}
+            {/* ✅ Success message with aria-live="polite" */}
+            {success && (
+              <p aria-live="polite" className="text-sm text-green-400">
+                ✅ Opening WhatsApp — see you there!
+              </p>
+            )}
+
+            {/* ✅ Submit button with aria-label */}
             <button
               type="submit"
+              aria-label="Send message via WhatsApp"
               className="mt-1 flex items-center justify-center gap-2 rounded-xl border border-[#D4AF37]/25 bg-[#D4AF37]/10 py-3.5 text-sm font-bold text-[#D4AF37] transition-all duration-300 hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/18"
             >
               <Send size={14} strokeWidth={2.5} />

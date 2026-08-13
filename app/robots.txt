@@ -1,0 +1,13 @@
+# app/robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://astropatil.com/sitemap.xml
+
+# Disallow admin paths
+Disallow: /admin/
+Disallow: /api/
+
+# Crawl delay for large sites
+Crawl-delay: 10
