@@ -78,7 +78,7 @@ export default function About() {
                 <div className="relative aspect-3/4">
                   // app/components/sections/About.tsx
                   <Image
-                    src="/images/Image.webp" // ✅ Change .png to .webp
+                    src="/images/Image.webp"
                     alt="Astro Patil — Vedic Astrologer"
                     fill
                     priority
